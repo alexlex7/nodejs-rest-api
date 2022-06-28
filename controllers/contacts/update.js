@@ -1,13 +1,13 @@
-const contactCreateSchema = require('../../schemas/contacts');
 const { createError } = require('../../helpers');
-const { updateContact } = require('../../models/contacts');
+const { Contact } = require('../../models');
 
 const update = async (req, res) => {
-  const { error } = contactCreateSchema.validate(req.body);
-  if (error) {
-    throw createError(400, error.message);
-  }
-  const result = await updateContact(req.params.contactId, req.body);
+  const { contactId } = req.params;
+
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+
   if (!result) {
     throw createError(404, 'Not found');
   }
