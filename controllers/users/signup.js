@@ -2,6 +2,7 @@ const { createError, sendMail } = require('../../helpers');
 const { User } = require('../../models');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const gravatar = require('gravatar');
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -12,10 +13,12 @@ const signup = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const verificationToken = uuidv4();
+  const avatarURL = gravatar.url(email);
 
   const result = await User.create({
     email,
     password: hashPassword,
+    avatarURL,
     verificationToken,
   });
   const mail = {
@@ -30,6 +33,7 @@ const signup = async (req, res) => {
     user: {
       email: result.email,
       subscription: result.subscription,
+      avatarURL: result.avatarURL,
     },
   });
 };
