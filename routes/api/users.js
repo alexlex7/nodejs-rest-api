@@ -22,6 +22,13 @@ router.patch(
   validation(userSchemas.subscription),
   ctrlWrapper(ctrl.updateUser)
 );
+router.get('/verify/:verificationToken', ctrlWrapper(ctrl.verifyEmail));
+router.post(
+  '/verify',
+  validation(userSchemas.verification),
+  ctrlWrapper(ctrl.reSendEmail)
+);
+
 router.patch(
   '/avatars',
   authenticate,
